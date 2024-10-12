@@ -10,7 +10,11 @@ func GetHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func main() {
+func Start() {
 	http.HandleFunc("/", GetHandler)
 	http.ListenAndServe(":8080", nil)
+}
+
+func main() {
+	Start()
 }
