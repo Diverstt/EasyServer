@@ -5,9 +5,10 @@ import (
 )
 
 func GetHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodGet {
-		w.Write([]byte("Hello, World!"))
+	if r.Method != http.MethodGet {
+		http.Error(w, "You can sand only GET request", http.StatusMethodNotAllowed)
 	}
+	w.Write([]byte("Hello, World!"))
 }
 
 func Start() {
