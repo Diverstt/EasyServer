@@ -8,6 +8,6 @@ git add .
 
 git commit -m "."
 
-sleep 3
+sleep 4
 
 git push
