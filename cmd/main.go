@@ -10,7 +10,7 @@ func loggingMiddleware(next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			w.WriteHeader(http.StatusMethodNotAllowed)
-			fmt.Fprintf(w, "You can send only GET request\n")
+			fmt.Fprintf(w, "You can send only GET request")
 			return
 		} else {
 			log.Printf("%s %s\n", r.Method, r.URL.Path)
@@ -21,7 +21,7 @@ func loggingMiddleware(next http.HandlerFunc) http.HandlerFunc {
 
 func mainHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
-	fmt.Fprintf(w, "Middleware Test\n")
+	fmt.Fprintf(w, "Middleware Test")
 }
 
 func startServer() {
