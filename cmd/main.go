@@ -1,38 +1,26 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 )
 
-func loggingMiddleware(next http.HandlerFunc) http.HandlerFunc {
+func LoggerMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.Method != http.MethodGet {
-			w.WriteHeader(http.StatusMethodNotAllowed)
-			fmt.Fprintf(w, "You can send only GET request")
-			return
-		} else {
-			log.Printf("%s %s\n", r.Method, r.URL.Path)
-			next.ServeHTTP(w, r)
-		}
+		log.Printf("Запрос: %s %s", r.Method, r.URL.Path)
+
+		next.ServeHTTP(w, r)
 	})
 }
 
-func mainHandler(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
-	fmt.Fprintf(w, "Middleware Test")
-}
-
-func startServer() {
-	http.Handle("/", loggingMiddleware(mainHandler))
-
-	log.Println("Server is running on port 8080")
-	if err := http.ListenAndServe(":8080", nil); err != nil {
-		log.Fatal(err)
-	}
-}
-
 func main() {
-	startServer()
+	http.Handle("/", LoggerMiddleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == http.MethodGet {
+			w.Write([]byte("Middleware Test"))
+		} else {
+			http.Error(w, "Метод не разрешен", http.StatusMethodNotAllowed)
+		}
+	})))
+
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
